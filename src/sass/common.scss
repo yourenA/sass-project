@@ -13,7 +13,6 @@ div {
   width: 50%;
   height: 100px;
   line-height: 100px;
-  overflow: hidden;
   border: 1px solid $main-color;
   text-align: center;
 
@@ -45,7 +44,7 @@ div.css3prefix {
 }
 
 @function white($opacity) {
-  @return rgba(255, 255, 0, $opacity)
+  @return rgba(255, 255, 255, $opacity)
 }
 
 div.BRWOpacity {
@@ -195,4 +194,87 @@ div.theme {
       @warn "The key `#{$key} isn't defined in the map $config`"
     }
   }
+}
+
+//清除浮动
+$legacy-support-for-ie: true !default;
+@mixin clearfix {
+  @if $legacy-support-for-ie {
+    *zoom: 1;
+  }
+  &:before, &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+    overflow: hidden;
+  }
+}
+
+%clearfix {
+  @include clearfix;
+}
+
+.clearfix {
+  @extend %clearfix;
+}
+
+/*透明度*/
+@mixin opacity($opacity:50) {
+  opacity: $opacity / 100;
+  @if $legacy-support-for-ie {
+    filter: alpha(opacity=$opacity);
+  }
+}
+
+.opacity {
+  background: black(1);
+  @include opacity(10);
+  color: white(1);
+  a {
+    color: white(1);
+  }
+}
+
+//三角形
+@mixin arrow($direction,$size,$color) {
+  &:after{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+    border-width: $size;
+    cursor: pointer;
+    @if $direction == top {
+      border-style: dashed dashed solid dashed;
+      border-color: transparent transparent $color transparent;
+      border-top: none;
+    } @else if $direction == bottom {
+      border-style: solid dashed dashed dashed;
+      border-color: $color transparent transparent transparent;
+      border-bottom: none;
+    } @else if $direction == right {
+      border-style: dashed dashed dashed solid;
+      border-color: transparent transparent transparent $color;
+      border-right: none;
+    } @else if $direction == left {
+      border-style: dashed solid dashed dashed;
+      border-color: transparent $color transparent transparent;
+      border-left: none;
+    }
+  }
+
+}
+
+.arrow {
+  position: relative;
+  &:after{
+    top: 100%;
+    left: 0;
+  }
+  @include arrow(bottom, 20px, $main-color); //向下，10px大小，红色箭头
 }

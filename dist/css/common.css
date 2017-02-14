@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html {
   font-size: 16px; }
 
@@ -7,7 +8,6 @@ div {
   width: 50%;
   height: 100px;
   line-height: 100px;
-  overflow: hidden;
   border: 1px solid #293;
   text-align: center; }
 
@@ -79,3 +79,40 @@ div.ZIndex {
 .theme-dark div.theme {
   background: #666;
   color: #fff; }
+
+.clearfix {
+  *zoom: 1; }
+  .clearfix:before, .clearfix:after {
+    content: "";
+    display: table; }
+  .clearfix:after {
+    clear: both;
+    overflow: hidden; }
+
+/*透明度*/
+.opacity {
+  background: black;
+  opacity: 0.1;
+  filter: alpha(opacity=10);
+  color: white; }
+  .opacity a {
+    color: white; }
+
+.arrow {
+  position: relative; }
+  .arrow:after {
+    top: 100%;
+    left: 0; }
+  .arrow:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+    border-width: 20px;
+    cursor: pointer;
+    border-style: solid dashed dashed dashed;
+    border-color: #293 transparent transparent transparent;
+    border-bottom: none; }
