@@ -1,0 +1,198 @@
+@charset "utf-8";
+html {
+  font-size: 16px;
+}
+
+//定义变量
+$main-color: #293;
+$style: solid;
+$base-fontSize: 16px;
+div {
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: 50%;
+  height: 100px;
+  line-height: 100px;
+  overflow: hidden;
+  border: 1px solid $main-color;
+  text-align: center;
+
+}
+
+div.var {
+  a {
+    display: block;
+
+    color: $main-color;
+    font-size: $base-fontSize * 2;
+  }
+}
+
+//定义css3前缀
+@mixin css3($property, $value) {
+  @each $prefix in -webkit-, -moz-, -ms-, -o-, '' {
+    #{$prefix}#{$property}: $value;
+  }
+}
+
+div.css3prefix {
+  @include css3(border-radius, 20px)
+}
+
+//定义黑白透明度
+@function black($opacity) {
+  @return rgba(0, 0, 0, $opacity)
+}
+
+@function white($opacity) {
+  @return rgba(255, 255, 0, $opacity)
+}
+
+div.BRWOpacity {
+  background: black(0.05);
+}
+
+//定义valid error  warning info颜色组
+%message {
+  margin-bottom: .5em;
+  border-radius: .15em;
+  border: 1px solid;
+}
+
+@mixin message($color) {
+  @if type-of($color) == color {
+    @extend %message;
+    color: $color;
+    border-color: lighten($color, 20%);
+    background: lighten($color, 40%);
+  } @else {
+    @warn "#{$color} is not a color for `message`.";
+  }
+}
+
+$message-types: (
+        error : #b94a40,
+        valid : #468847,
+        warning : #c09853,
+        info : #3a87ad
+) !default;
+
+@each $type, $color in $message-types {
+  .message-#{$type} {
+    @include message($color);
+  }
+}
+
+//px转rem
+@function px2rem($px, $base-font-size: 16px) {
+  @if (unitless($px)) {
+    @return px2rem($px + 0px); // That may fail.
+  } @else if (unit($px) == rem) {
+    @return $px;
+  }
+  @return ($px / $base-font-size) * 1rem;
+}
+
+div.px2rem {
+  height: px2rem(125px);
+}
+
+//手淘flexible字号设置
+@mixin font-dpr($font-size) {
+  font-size: $font-size;
+  [data-dpr="2"] & {
+    font-size: $font-size * 2;
+  }
+  [data-dpr="3"] & {
+    font-size: $font-size * 3;
+  }
+}
+
+div.flexibleFontSize {
+  @include font-dpr(16px);
+}
+
+//利用mao定义不同的z-index
+$layer: (
+        offcanvas: 1,
+        lightbox: 500,
+        dropdown: 10,
+        tooltip: 15
+);
+
+@function layer($name) {
+  @if map-has-key($layer, $name) {
+    @return map-get($layer, $name);
+  }
+  @warn "The key #{$name} is not in the map '$layer'";
+  @return null;
+}
+
+;
+
+div.ZIndex {
+  z-index: layer(lightbox);
+}
+
+//利用map处理断点
+$breakpoints: (
+        small: 320px,
+        medium: 600px,
+        large: 768px
+);
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $value: map-get($breakpoints, $breakpoint);
+    @media screen and (min-width: $value) {
+      @content;
+    }
+  }
+  @warn "Unknown `#{$breakpoint}` in $breakpoints";
+}
+
+.breakpoint {
+  background-color: #f2f2f2;
+  @include respond-to(medium) {
+    background-color: #666;
+  }
+  @include respond-to(large) {
+    background-color: #4455ff;
+  }
+}
+
+//利用map更换主题
+$themes: (
+        theme1: theme-light,
+        theme2: theme-dark
+);
+@function setStyle($map, $object, $style) {
+  @if map-has-key($map, $object) {
+    @return map-get(map-get($map, $object), $style);
+  }
+  @warn "The key `#{$object}` is not available in the map.";
+  @return null;
+}
+
+$config: (
+        theme1: (
+                background: #f2f2f2,
+                color: #000
+        ),
+        theme2: (
+                background: #666,
+                color: #fff
+        )
+);
+
+div.theme {
+  @each $key, $value in $themes {
+    @if map-has-key($config, $key) {
+      .#{$value} & {
+        background: setStyle($config, $key, background);
+        color: setStyle($config, $key, color);
+      }
+    } @else {
+      @warn "The key `#{$key} isn't defined in the map $config`"
+    }
+  }
+}
