@@ -295,5 +295,5 @@ $legacy-support-for-ie: true !default;
     top: 100%;
     left: 0;
   }
-  @include arrow(bottom, 20px, $main-color); //向下，10px大小，红色箭头
+  @include arrow(bottom, 20px, $main-color); //向下，10px大小，绿色箭头
 }
