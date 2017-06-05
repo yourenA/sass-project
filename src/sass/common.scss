@@ -21,13 +21,11 @@ div {
 div.var {
   a {
     display: block;
-
     color: $main-color;
     font-size: $base-fontSize * 2;
   }
 }
-
-//定义css3前缀
+/* @include css3()引用mixin each X in X,X,X {}遍历in后面的内容 #\{\}#\{\}拼接字符串 */
 @mixin css3($property, $value) {
   @each $prefix in -webkit-, -moz-, -ms-, -o-, '' {
     #{$prefix}#{$property}: $value;
@@ -38,6 +36,10 @@ div.css3prefix {
   @include css3(border-radius, 20px)
 }
 
+///**
+//* functionName直接使用方法
+//* @return 方法需要有一个返回值
+//*/
 //定义黑白透明度
 @function black($opacity) {
   @return rgba(0, 0, 0, $opacity)
@@ -50,7 +52,13 @@ div.css3prefix {
 div.BRWOpacity {
   background: black(0.05);
 }
-
+//
+///**
+//* %name公共占位符
+//* @extend %name引用公共占位符
+//* @if {} @else{} 判断语句
+//*  type-of()类型判断
+//*/
 //定义valid error  warning info颜色组
 %message {
   margin-bottom: .5em;
@@ -69,6 +77,10 @@ div.BRWOpacity {
   }
 }
 
+///**
+//* $varName:(key:value)定义键值对
+//* @each $key, $value in $message-types{}
+//**/
 $message-types: (
         error : #b94a40,
         valid : #468847,
@@ -118,7 +130,7 @@ $layer: (
         dropdown: 10,
         tooltip: 15
 );
-
+//map-has-key(对象, 属性)判断对象中是否有属性，map-get(对象, 属性)获取对象中的某个属性值
 @function layer($name) {
   @if map-has-key($layer, $name) {
     @return map-get($layer, $name);
@@ -141,9 +153,9 @@ $breakpoints: (
 );
 @mixin respond-to($breakpoint) {
   @if map-has-key($breakpoints, $breakpoint) {
-    $value: map-get($breakpoints, $breakpoint);
+    $value: map-get($breakpoints, $breakpoint);//将对象的某一个值赋值为变量
     @media screen and (min-width: $value) {
-      @content;
+      @content;//@content读取@include下面的内容
     }
   }
   @warn "Unknown `#{$breakpoint}` in $breakpoints";
@@ -193,6 +205,13 @@ div.theme {
     } @else {
       @warn "The key `#{$key} isn't defined in the map $config`"
     }
+  }
+}
+//根据dpr选择不同大小的图片作为背景图
+@mixin bg-image($url){
+  background-image: url($url+'@2x.png');
+  @media(-webkit-min-device-pixel-ratio:3),(min-device-pixel-ratio:3){
+    background-image: url($url+'@3x.png');
   }
 }
 

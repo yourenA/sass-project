@@ -16,6 +16,7 @@ div.var a {
   color: #293;
   font-size: 32px; }
 
+/* @include css3()引用mixin each X in X,X,X {}遍历in后面的内容 #\{\}#\{\}拼接字符串 */
 div.css3prefix {
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
